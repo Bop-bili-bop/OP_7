@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SinglyLinkedListLibrary
 {
@@ -14,31 +16,69 @@ namespace SinglyLinkedListLibrary
         }
     }
 
+    
     public class SinglyLinkedList : IEnumerable<float>
     {
         private Node? head;
-        public void AddAfterSecond(float value)
+        public bool IsEmpty()
+        {
+            Node? current = head;
+    
+            while (current != null)
+            {
+                return false; 
+            }
+
+            return true; 
+        }
+        public void Add(float value)
         {
             Node newNode = new Node(value);
-            if (head == null || head.Next == null)
-            {
-                if (head == null)
-                {
-                    head = newNode;
-                }
-                else
-                {
-                    head.Next = newNode;
-                }
-            }
-            else
-            {
-                Node second = head.Next;
-                newNode.Next = second.Next;
-                second.Next = newNode;
-            }
-        }
 
+            if (IsEmpty())
+            {
+                head = newNode;
+                return;
+            }
+
+            Node current = head;
+            while (current.Next != null)
+            {
+                current = current.Next;
+            }
+
+            current.Next = newNode;
+        }
+        
+        public void AddAfterIndex(int index, float value)
+        {
+            Node newNode = new Node(value);
+
+            if (index < 0)
+                throw new IndexOutOfRangeException();
+
+            if (IsEmpty())
+            {
+                throw new IndexOutOfRangeException("List empty");
+            }
+
+            int currentIndex = 0;
+            Node? current = head;
+
+            while (current != null && currentIndex < index)
+            {
+                current = current.Next;
+                currentIndex++;
+            }
+
+            if (current == null)
+                throw new IndexOutOfRangeException();
+
+            newNode.Next = current.Next;
+            current.Next = newNode;
+        }
+        
+        public void AddAfterSecond(float value) => AddAfterIndex(1, value);
         public float? FindFirstNegative()
         {
             var current = head;
@@ -64,7 +104,7 @@ namespace SinglyLinkedListLibrary
             }
             return count == 0 ? 0 : sum / count;
         }
-
+        
         public float SumGreaterThanAverage()
         {
             float average = FindAverage();
@@ -78,22 +118,20 @@ namespace SinglyLinkedListLibrary
             }
             return sum;
         }
-
+        
         public SinglyLinkedList GetPositiveElements()
         {
             var result = new SinglyLinkedList();
-            var current = head;
-            while (current != null)
+            foreach (var value in this)
             {
-                if (current.Data > 0)
+                if (value > 0)
                 {
-                    result.AddAfterSecond(current.Data); 
+                    result.Add(value); 
                 }
-                current = current.Next;
             }
             return result;
         }
-
+        
         public void RemoveNegatives()
         {
             while (head != null && head.Data < 0)
@@ -114,7 +152,56 @@ namespace SinglyLinkedListLibrary
                 }
             }
         }
+        
+        public float this[int index]
+        {
+            get
+            {
+                if (index < 0)
+                    throw new IndexOutOfRangeException();
 
+                int count = 0;
+                var current = head;
+                while (current != null)
+                {
+                    if (count == index)
+                        return current.Data;
+                    count++;
+                    current = current.Next;
+                }
+
+                throw new IndexOutOfRangeException();
+            }
+        }
+        
+        public void RemoveAt(int index)
+        {
+            if (index < 0)
+                throw new IndexOutOfRangeException();
+
+            if (head == null)
+                throw new InvalidOperationException("List is empty");
+
+            if (index == 0)
+            {
+                head = head.Next;
+                return;
+            }
+
+            Node? current = head;
+            for (int i = 0; i < index - 1; i++)
+            {
+                if (current == null || current.Next == null)
+                    throw new IndexOutOfRangeException();
+                current = current.Next;
+            }
+
+            if (current.Next == null)
+                throw new IndexOutOfRangeException();
+
+            current.Next = current.Next.Next;
+        }
+        
         public void Print()
         {
             foreach (var item in this)
@@ -123,7 +210,7 @@ namespace SinglyLinkedListLibrary
             }
             Console.WriteLine();
         }
-
+        
         public IEnumerator<float> GetEnumerator()
         {
             var current = head;

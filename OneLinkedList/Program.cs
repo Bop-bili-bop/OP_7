@@ -1,28 +1,49 @@
 ﻿using System;
 using SinglyLinkedListLibrary;
-class Program
+
+namespace SinglyLinkedListDemo
 {
-    static void Main()
+    class Program
     {
-        var list = new SinglyLinkedList();
-        list.AddAfterSecond(2.5f);
-        list.AddAfterSecond(-3.1f);
-        list.AddAfterSecond(1.2f);
-        list.AddAfterSecond(4.8f);
-        list.AddAfterSecond(-0.5f);
+        static void Main(string[] args)
+        {
+            var list = new SinglyLinkedList();
+            list.Add(3.4f);
+            list.Add(-2.1f);
+            list.AddAfterIndex(1, 5.7f);
+            list.AddAfterSecond(-8.3f);
+            list.AddAfterSecond(-1.1f);
+            list.AddAfterSecond(9.3f);
 
-        Console.WriteLine("Original list:");
-        list.Print();
+            Console.WriteLine("Orinial list");
+            list.Print();
 
-        Console.WriteLine("First negative: " + list.FindFirstNegative());
-        Console.WriteLine("Sum > average: " + list.SumGreaterThanAverage());
+            Console.WriteLine("First negative:");
+            Console.WriteLine(list.FindFirstNegative());
 
-        Console.WriteLine("Positive elements list:");
-        var positives = list.GetPositiveElements();
-        positives.Print();
+            Console.WriteLine("Sum greater than average:");
+            Console.WriteLine(list.SumGreaterThanAverage());
 
-        list.RemoveNegatives();
-        Console.WriteLine("List after removing negatives:");
-        list.Print();
+            Console.WriteLine("Positive elements:");
+            var positives = list.GetPositiveElements();
+            positives.Print();
+
+            Console.WriteLine("Delete all the negative elements:");
+            list.RemoveNegatives();
+            list.Print();
+
+            Console.WriteLine("Element with index 1:");
+            Console.WriteLine(list[1]);
+
+            Console.WriteLine("Remove element with index 1:");
+            list.RemoveAt(1);
+            list.Print();
+
+            Console.WriteLine("Iteration using foreach:");
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+        }
     }
 }
